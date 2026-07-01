@@ -9,5 +9,34 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+}
+
+enum ProjectStatus {
+  EM_ANALISE
+  APROVADO
+  EM_ANDAMENTO
+  ENCERRADO
+  CANCELADO
+}
+
+enum ProjectRisk {
+  BAIXO
+  MEDIO
+  ALTO
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  name        String
+  startDate   DateTime
+  endDate     DateTime
+  budget      Decimal       @db.Decimal(12, 2)
+  description String?
+  status      ProjectStatus @default(EM_ANALISE)
+  risk        ProjectRisk
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("projects")
 }
