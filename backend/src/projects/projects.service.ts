@@ -3,11 +3,15 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { UpdateProjectStatusDto } from './dto/update-project-status.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { ProjectRisk } from '@prisma/client';
+import { ProjectRisk, ProjectStatus } from '@prisma/client';
+import { AiService } from '../ai/ai.service';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly aiService: AiService,
+  ) {}
 
   async create(createProjectDto: CreateProjectDto) {
     const startDate = new Date(createProjectDto.startDate);
@@ -84,22 +88,66 @@ export class ProjectsService {
   }
 
   async updateStatus(id: string, updateProjectStatusDto: UpdateProjectStatusDto) {
-    await this.findOne(id);
+    const existing = await this.findOne(id);
+    const oldStatus = existing.status;
+    const newStatus = updateProjectStatusDto.status;
+
+    if (oldStatus === newStatus) {
+      return existing;
+    }
+
+    const allowedTransitions: Record<ProjectStatus, ProjectStatus[]> = {
+      [ProjectStatus.EM_ANALISE]: [ProjectStatus.APROVADO, ProjectStatus.CANCELADO],
+      [ProjectStatus.APROVADO]: [ProjectStatus.EM_ANDAMENTO, ProjectStatus.CANCELADO],
+      [ProjectStatus.EM_ANDAMENTO]: [ProjectStatus.ENCERRADO, ProjectStatus.CANCELADO],
+      [ProjectStatus.ENCERRADO]: [],
+      [ProjectStatus.CANCELADO]: [],
+    };
+
+    const isTransitionAllowed = allowedTransitions[oldStatus].includes(newStatus);
+
+    if (!isTransitionAllowed) {
+      throw new BadRequestException(
+        `Transição de status inválida: não é permitido alterar de '${oldStatus}' para '${newStatus}'`,
+      );
+    }
 
     return this.prisma.project.update({
       where: { id },
       data: {
-        status: updateProjectStatusDto.status,
+        status: newStatus,
       },
     });
   }
 
   async remove(id: string) {
-    await this.findOne(id);
+    const existing = await this.findOne(id);
+
+    if (existing.status === ProjectStatus.EM_ANDAMENTO || existing.status === ProjectStatus.ENCERRADO) {
+      throw new BadRequestException(
+        `Não é permitido excluir um projeto com o status atual '${existing.status}'`,
+      );
+    }
 
     await this.prisma.project.delete({
       where: { id },
     });
+  }
+
+  async analyze(id: string) {
+    const project = await this.findOne(id);
+
+    const analysis = await this.aiService.analyzeProject({
+      name: project.name,
+      startDate: project.startDate,
+      endDate: project.endDate,
+      budget: project.budget.toNumber(),
+      description: project.description,
+      risk: project.risk,
+      status: project.status,
+    });
+
+    return { analysis };
   }
 
   /**

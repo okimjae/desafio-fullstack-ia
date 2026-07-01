@@ -33,6 +33,11 @@ export class ProjectsController {
     return this.projectsService.updateStatus(id, updateProjectStatusDto);
   }
 
+  @Post(':id/analyze')
+  analyze(@Param('id') id: string) {
+    return this.projectsService.analyze(id);
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
