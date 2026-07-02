@@ -294,20 +294,20 @@ export function ProjectDetailsModal({
               <div className="mt-4 rounded-2xl border border-border bg-muted/20 p-5 overflow-x-auto max-h-[400px] overflow-y-auto">
                 <ReactMarkdown
                   components={{
-                    h2: ({node, ...props}) => <h2 className="text-lg font-bold text-foreground mt-4 mb-2 border-b border-border pb-1" {...props} />,
-                    h3: ({node, ...props}) => <h3 className="text-sm font-bold text-primary mt-4 mb-1.5 uppercase tracking-wider" {...props} />,
-                    p: ({node, ...props}) => <p className="text-sm text-foreground/95 leading-relaxed mb-3" {...props} />,
-                    table: ({node, ...props}) => (
+                    h2: ({...props}) => <h2 className="text-lg font-bold text-foreground mt-4 mb-2 border-b border-border pb-1" {...props} />,
+                    h3: ({...props}) => <h3 className="text-sm font-bold text-primary mt-4 mb-1.5 uppercase tracking-wider" {...props} />,
+                    p: ({...props}) => <p className="text-sm text-foreground/95 leading-relaxed mb-3" {...props} />,
+                    table: ({...props}) => (
                       <div className="overflow-x-auto my-4 rounded-xl border border-border">
                         <table className="w-full border-collapse" {...props} />
                       </div>
                     ),
-                    th: ({node, ...props}) => <th className="border-b border-border bg-muted px-4 py-3 text-left text-xs font-semibold text-foreground" {...props} />,
-                    td: ({node, ...props}) => <td className="border-b border-border px-4 py-3 text-xs text-foreground/90" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc pl-5 space-y-1 mb-3 text-sm text-foreground/90" {...props} />,
-                    ol: ({node, ...props}) => <ol className="list-decimal pl-5 space-y-1 mb-3 text-sm text-foreground/90" {...props} />,
-                    li: ({node, ...props}) => <li className="text-sm" {...props} />,
-                    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-primary bg-muted px-4 pr-2 py-2 rounded-r-xl my-3 text-xs text-muted-foreground" {...props} />,
+                    th: ({...props}) => <th className="border-b border-border bg-muted px-4 py-3 text-left text-xs font-semibold text-foreground" {...props} />,
+                    td: ({...props}) => <td className="border-b border-border px-4 py-3 text-xs text-foreground/90" {...props} />,
+                    ul: ({...props}) => <ul className="list-disc pl-5 space-y-1 mb-3 text-sm text-foreground/90" {...props} />,
+                    ol: ({...props}) => <ol className="list-decimal pl-5 space-y-1 mb-3 text-sm text-foreground/90" {...props} />,
+                    li: ({...props}) => <li className="text-sm" {...props} />,
+                    blockquote: ({...props}) => <blockquote className="border-l-4 border-primary bg-muted px-4 pr-2 py-2 rounded-r-xl my-3 text-xs text-muted-foreground" {...props} />,
                   }}
                 >
                   {analysis}

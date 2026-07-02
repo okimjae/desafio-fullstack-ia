@@ -16,11 +16,16 @@ export class AiClient {
         this.logger.error('Erro ao inicializar o cliente Gemini:', error);
       }
     } else {
-      this.logger.warn('GEMINI_API_KEY não configurada. A API utilizará o Mock Fallback.');
+      this.logger.warn(
+        'GEMINI_API_KEY não configurada. A API utilizará o Mock Fallback.',
+      );
     }
   }
 
-  async generateContent(prompt: string, fallbackGenerator: () => string): Promise<string> {
+  async generateContent(
+    prompt: string,
+    fallbackGenerator: () => string,
+  ): Promise<string> {
     if (this.googleAi) {
       try {
         const response = await this.googleAi.models.generateContent({
@@ -32,14 +37,18 @@ export class AiClient {
           return response.text;
         }
         throw new Error('Retorno sem conteúdo de texto da API do Gemini.');
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
         this.logger.error(
-          `Falha na chamada da API do Gemini (limite de cota ou erro de rede). Acionando Fallback. Erro: ${error.message}`,
+          `Falha na chamada da API do Gemini (limite de cota ou erro de rede). Acionando Fallback. Erro: ${errorMessage}`,
         );
         return fallbackGenerator();
       }
     } else {
-      this.logger.log('Gemini API indisponível no momento. Acionando Fallback.');
+      this.logger.log(
+        'Gemini API indisponível no momento. Acionando Fallback.',
+      );
       return fallbackGenerator();
     }
   }

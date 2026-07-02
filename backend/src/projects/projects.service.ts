@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { UpdateProjectStatusDto } from './dto/update-project-status.dto';
@@ -18,10 +22,16 @@ export class ProjectsService {
     const endDate = new Date(createProjectDto.endDate);
 
     if (endDate < startDate) {
-      throw new BadRequestException('A data de previsão de término não pode ser anterior à data de início');
+      throw new BadRequestException(
+        'A data de previsão de término não pode ser anterior à data de início',
+      );
     }
 
-    const risk = this.calculateRisk(createProjectDto.budget, startDate, endDate);
+    const risk = this.calculateRisk(
+      createProjectDto.budget,
+      startDate,
+      endDate,
+    );
 
     return this.prisma.project.create({
       data: {
@@ -56,14 +66,23 @@ export class ProjectsService {
   async update(id: string, updateProjectDto: UpdateProjectDto) {
     const existing = await this.findOne(id);
 
-    const finalStartDate = updateProjectDto.startDate ? new Date(updateProjectDto.startDate) : existing.startDate;
-    const finalEndDate = updateProjectDto.endDate ? new Date(updateProjectDto.endDate) : existing.endDate;
+    const finalStartDate = updateProjectDto.startDate
+      ? new Date(updateProjectDto.startDate)
+      : existing.startDate;
+    const finalEndDate = updateProjectDto.endDate
+      ? new Date(updateProjectDto.endDate)
+      : existing.endDate;
 
     if (finalEndDate < finalStartDate) {
-      throw new BadRequestException('A data de previsão de término não pode ser anterior à data de início');
+      throw new BadRequestException(
+        'A data de previsão de término não pode ser anterior à data de início',
+      );
     }
 
-    const finalBudget = updateProjectDto.budget !== undefined ? updateProjectDto.budget : existing.budget.toNumber();
+    const finalBudget =
+      updateProjectDto.budget !== undefined
+        ? updateProjectDto.budget
+        : existing.budget.toNumber();
 
     let risk = existing.risk;
     if (
@@ -87,7 +106,10 @@ export class ProjectsService {
     });
   }
 
-  async updateStatus(id: string, updateProjectStatusDto: UpdateProjectStatusDto) {
+  async updateStatus(
+    id: string,
+    updateProjectStatusDto: UpdateProjectStatusDto,
+  ) {
     const existing = await this.findOne(id);
     const oldStatus = existing.status;
     const newStatus = updateProjectStatusDto.status;
@@ -97,14 +119,24 @@ export class ProjectsService {
     }
 
     const allowedTransitions: Record<ProjectStatus, ProjectStatus[]> = {
-      [ProjectStatus.EM_ANALISE]: [ProjectStatus.APROVADO, ProjectStatus.CANCELADO],
-      [ProjectStatus.APROVADO]: [ProjectStatus.EM_ANDAMENTO, ProjectStatus.CANCELADO],
-      [ProjectStatus.EM_ANDAMENTO]: [ProjectStatus.ENCERRADO, ProjectStatus.CANCELADO],
+      [ProjectStatus.EM_ANALISE]: [
+        ProjectStatus.APROVADO,
+        ProjectStatus.CANCELADO,
+      ],
+      [ProjectStatus.APROVADO]: [
+        ProjectStatus.EM_ANDAMENTO,
+        ProjectStatus.CANCELADO,
+      ],
+      [ProjectStatus.EM_ANDAMENTO]: [
+        ProjectStatus.ENCERRADO,
+        ProjectStatus.CANCELADO,
+      ],
       [ProjectStatus.ENCERRADO]: [],
       [ProjectStatus.CANCELADO]: [],
     };
 
-    const isTransitionAllowed = allowedTransitions[oldStatus].includes(newStatus);
+    const isTransitionAllowed =
+      allowedTransitions[oldStatus].includes(newStatus);
 
     if (!isTransitionAllowed) {
       throw new BadRequestException(
@@ -123,7 +155,10 @@ export class ProjectsService {
   async remove(id: string) {
     const existing = await this.findOne(id);
 
-    if (existing.status === ProjectStatus.EM_ANDAMENTO || existing.status === ProjectStatus.ENCERRADO) {
+    if (
+      existing.status === ProjectStatus.EM_ANDAMENTO ||
+      existing.status === ProjectStatus.ENCERRADO
+    ) {
       throw new BadRequestException(
         `Não é permitido excluir um projeto com o status atual '${existing.status}'`,
       );
@@ -154,7 +189,11 @@ export class ProjectsService {
    * Calcula o risco do projeto baseado no orçamento e no prazo.
    * Aplica a regra de prevalência do maior risco.
    */
-  private calculateRisk(budget: number, startDate: Date, endDate: Date): ProjectRisk {
+  private calculateRisk(
+    budget: number,
+    startDate: Date,
+    endDate: Date,
+  ): ProjectRisk {
     const diffInMs = endDate.getTime() - startDate.getTime();
     const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
     const diffInMonths = diffInDays / 30;
@@ -187,6 +226,8 @@ export class ProjectsService {
       [ProjectRisk.ALTO]: 3,
     };
 
-    return riskLevels[budgetRisk] >= riskLevels[durationRisk] ? budgetRisk : durationRisk;
+    return riskLevels[budgetRisk] >= riskLevels[durationRisk]
+      ? budgetRisk
+      : durationRisk;
   }
 }

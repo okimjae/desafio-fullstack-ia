@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MinLength, IsDateString, IsNumber, Min, IsOptional } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  IsDateString,
+  IsNumber,
+  Min,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateProjectDto {
   @ApiProperty({
@@ -9,14 +17,19 @@ export class CreateProjectDto {
   })
   @IsString()
   @IsNotEmpty({ message: 'O nome do projeto é obrigatório' })
-  @MinLength(3, { message: 'O nome do projeto deve ter no mínimo 3 caracteres' })
+  @MinLength(3, {
+    message: 'O nome do projeto deve ter no mínimo 3 caracteres',
+  })
   name: string;
 
   @ApiProperty({
     description: 'Data de início do projeto (ISO 8601)',
     example: '2026-07-01T00:00:00Z',
   })
-  @IsDateString({}, { message: 'A data de início deve ser uma data válida no formato ISO' })
+  @IsDateString(
+    {},
+    { message: 'A data de início deve ser uma data válida no formato ISO' },
+  )
   @IsNotEmpty({ message: 'A data de início é obrigatória' })
   startDate: string;
 
@@ -24,7 +37,13 @@ export class CreateProjectDto {
     description: 'Previsão de término do projeto (ISO 8601)',
     example: '2026-09-01T00:00:00Z',
   })
-  @IsDateString({}, { message: 'A data de previsão de término deve ser uma data válida no formato ISO' })
+  @IsDateString(
+    {},
+    {
+      message:
+        'A data de previsão de término deve ser uma data válida no formato ISO',
+    },
+  )
   @IsNotEmpty({ message: 'A data de previsão de término é obrigatória' })
   endDate: string;
 

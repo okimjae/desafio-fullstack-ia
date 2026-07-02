@@ -29,22 +29,37 @@ export class AiAnalysisService {
       const diffInDays = Math.ceil(diffInMs / (1000 * 60 * 60 * 24));
       const durationMonths = (diffInDays / 30).toFixed(1);
 
-      return this.generateMockAnalysis(project, startStr, endStr, budgetFormatted, diffInDays, durationMonths);
+      return this.generateMockAnalysis(
+        project,
+        startStr,
+        endStr,
+        budgetFormatted,
+        diffInDays,
+        durationMonths,
+      );
     });
   }
 
   private generateMockAnalysis(
-    project: any,
+    project: { name: string; budget: number; status: string; risk: string },
     startStr: string,
     endStr: string,
     budgetFormatted: string,
     diffInDays: number,
     durationMonths: string,
   ): string {
-    const riskBadge = project.risk === 'ALTO' ? '🔴 ALTO' : project.risk === 'MEDIO' ? '🟡 MÉDIO' : '🟢 BAIXO';
+    const riskBadge =
+      project.risk === 'ALTO'
+        ? '🔴 ALTO'
+        : project.risk === 'MEDIO'
+          ? '🟡 MÉDIO'
+          : '🟢 BAIXO';
     const burnRateValue = project.budget / (Number(durationMonths) || 1);
-    const burnRateFormatted = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(burnRateValue);
-    
+    const burnRateFormatted = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(burnRateValue);
+
     return `## 📊 Relatório de Viabilidade: ${project.name} (Modo Simulação)
 
 > **Nota do Sistema:** Esta análise foi gerada localmente pelo motor de fallback devido à ausência ou limite da API Key do Gemini.
