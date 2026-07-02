@@ -91,11 +91,4 @@ docker compose up -d
     ```
 *O frontend estará rodando em **`http://localhost:5173`**.*
 
----
 
-## ✨ Diferenciais Técnicos e Capricho de Entrega
-
-*   **Lint Totalmente Limpo (Zero Warnings/Errors):** Ambas as bases de código (frontend e backend) foram validadas e corrigidas contra avisos do compilador TypeScript e regras do ESLint/Oxlint.
-*   **Segurança no Fluxo de Status:** O backend valida estritamente a máquina de estados (ex: impede pular etapas de `EM_ANALISE` direto para `EM_ANDAMENTO`).
-*   **Bloqueio de Exclusão:** Projetos com status ativos (`EM_ANDAMENTO` ou `ENCERRADO`) têm sua exclusão bloqueada no banco e o botão desabilitado na interface.
-*   **Mecanismo de Fallback de IA:** Se a chamada para o Gemini falhar ou se a chave não estiver preenchida no arquivo `.env`, o sistema gera uma análise simulada com base no escopo e valores reais cadastrados do projeto, de forma que o app nunca exiba erros na tela.
