@@ -4,13 +4,13 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { UpdateProjectStatusDto } from './dto/update-project-status.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { ProjectRisk, ProjectStatus } from '@prisma/client';
-import { AiService } from '../ai/ai.service';
+import { AiAnalysisService } from '../ai/ai.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly aiService: AiService,
+    private readonly aiService: AiAnalysisService,
   ) {}
 
   async create(createProjectDto: CreateProjectDto) {

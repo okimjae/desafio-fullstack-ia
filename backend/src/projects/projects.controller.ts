@@ -51,7 +51,7 @@ export class ProjectsController {
     return this.projectsService.updateStatus(id, updateProjectStatusDto);
   }
 
-  @Post(':id/analyze')
+  @Get(':id/ai-analysis')
   @ApiOperation({ summary: 'Análise de Inteligência Artificial', description: 'Envia os dados do projeto para a API do Google Gemini gerar um relatório detalhado de viabilidade em Markdown.' })
   @ApiResponse({ status: 200, description: 'Relatório de viabilidade em Markdown retornado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Projeto não encontrado.' })
