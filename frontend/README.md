@@ -1,32 +1,5 @@
-# React + TypeScript + Vite
+# Frontend - Gerenciador de Projetos IA
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Esta pasta contém o painel administrativo desenvolvido em **React** com **TypeScript**, utilizando o **Vite** como build tool e **Tailwind CSS v4** + **Shadcn UI v4** para a interface do usuário.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+*   Para instruções passo a passo de como instalar as dependências e iniciar o servidor de desenvolvimento local do Vite, por favor acesse o **[README principal na raiz do projeto](../README.md)**.
